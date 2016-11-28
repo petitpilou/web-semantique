@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <title>Custom Non-Visible Data</title>
+    <meta charset="UTF-8">
+    <script>
+        var myDiv;
+        window.onload = function (e) {
+            myDiv = document.getElementById("myDiv");
+            myDiv.innerHTML = myDiv.dataset.greetingStudent;
+        }
+    </script>
+</head>
+<body>
+<div id="myDiv" data-greeting-student="Hello World!"></div>
+</body>
+</html>
