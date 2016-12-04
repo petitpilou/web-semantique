@@ -36,6 +36,61 @@
             <!-- ajouter à input l'attribut qui donne une indication grisée (placeholder) -->
         </li>
         <li>
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" id="nom"/>
+        </li>
+        <li>
+            <label for="ville">Ville :</label>
+            <input type="text" name="ville" id="ville"/>
+        </li>
+        <li>
+            <label for="taille">Taille: </label>
+            <input type="number" name="taille" id="taille"/>
+            <span class="form_hint">Taille en mètres.</span>
+        </li>
+        <li>
+            <label for="couleur">Couleur favorite: </label>
+            <input type="color" name="couleur" id="couleur"/>
+        </li>
+        <li>
+            <label for="mdp1">Mot de passe :</label>
+            <input type="password" name="password" id="mdp1" pattern="regex" onkeyup="validateMdp2()" title = "Le mot de passe doit contenir de 6 à 8 caractères alphanumériques." required placeholder="Entrez un mot de passe" pattern="[a-zA-Z0-9]{6,8}">
+            <!-- ajouter à input l'attribut qui dit que c'est un champs obligatoire -->
+            <!-- ajouter à input l'attribut qui donne une indication grisée (placeholder) -->
+            <!-- spécifiez l'expression régulière: le mot de passe doit être composé de 6 à 8 caractères alphanumériques -->
+            <!-- quels sont les deux scénarios où l'attribut title sera affiché ? -->
+            <!-- si le mot de passe n'est pas correct par rapport au pattern, et, si l'utilisateur survole le champ avec la souris -->
+
+            <!-- encore une fois, quelle est la différence entre name et id pour un input ? -->
+            <!-- l'attribut id n'est pas envoyé par le formulaire mais l'attribut name oui -->
+            <span class="form_hint">De 6 à 8 caractères alphanumériques.</span>
+        </li>
+        <li>
+            <label for="mdp2">Confirmez mot de passe :</label>
+            <input type="password" id="mdp2" required onkeyup="validateMdp2()" required placeholder="Répétez le mot de passe">
+            <!-- ajouter à input l'attribut qui dit que c'est un champs obligatoire -->
+            <!-- ajouter à input l'attribut qui donne une indication grisée (placeholder) -->
+            <!-- pourquoi est-ce qu'on a pas mis un attribut name ici ? -->
+            <!-- il n'est pas nécessaire car aucune information de ce champ ne sera récupérée est envoyée par le formulaire -->
+
+            <!-- quel scénario justifie qu'on ait ajouté l'écouter validateMdp2() à l'évènement onkeyup de l'input mdp1 ? -->
+            <!-- il faut que le contenu des deux champe password soient différents -->
+            <span class="form_hint">Les mots de passes doivent être égaux.</span>
+            <script>
+                validateMdp2 = function(e) {
+                    var mdp1 = document.getElementById('mdp1');
+                    var mdp2 = document.getElementById('mdp2');
+                    if (mdp1.valid && mdp1.textContent==mdp2.textContent) {
+                        // ici on supprime le message d'erreur personnalisé, et du coup mdp2 devient valide.
+                        document.getElementById('mdp2').setCustomValidity('');
+                    } else {
+                        // ici on ajoute un message d'erreur personnalisé, et du coup mdp2 devient invalide.
+                        document.getElementById('mdp2').setCustomValidity('Les mots de passes doivent être égaux.');
+                    }
+                }
+            </script>
+        </li>
+        <li>
             <input type="submit" value="Soumettre Formulaire">
         </li>
     </ul>
