@@ -54,7 +54,7 @@
         </li>
         <li>
             <label for="mdp1">Mot de passe :</label>
-            <input type="password" name="password" id="mdp1" pattern="regex" onkeyup="validateMdp2()" title = "Le mot de passe doit contenir de 6 à 8 caractères alphanumériques." required placeholder="Entrez un mot de passe" pattern="[a-zA-Z0-9]{6,8}">
+            <input type="password" name="password" id="mdp1" pattern="[a-zA-Z0-9]{6,8}" onkeyup="validateMdp2()" title = "Le mot de passe doit contenir de 6 à 8 caractères alphanumériques." required placeholder="Entrez un mot de passe">
             <!-- ajouter à input l'attribut qui dit que c'est un champs obligatoire -->
             <!-- ajouter à input l'attribut qui donne une indication grisée (placeholder) -->
             <!-- spécifiez l'expression régulière: le mot de passe doit être composé de 6 à 8 caractères alphanumériques -->
@@ -75,12 +75,14 @@
 
             <!-- quel scénario justifie qu'on ait ajouté l'écouter validateMdp2() à l'évènement onkeyup de l'input mdp1 ? -->
             <!-- il faut que le contenu des deux champe password soient différents -->
+
+            <!-- la verification se fait lors d'un keyup sur les deux champs pour que la vérification se fasse après modification de chacun des champs et non pas que du second -->
             <span class="form_hint">Les mots de passes doivent être égaux.</span>
             <script>
                 validateMdp2 = function(e) {
                     var mdp1 = document.getElementById('mdp1');
                     var mdp2 = document.getElementById('mdp2');
-                    if (mdp1.valid && mdp1.textContent==mdp2.textContent) {
+                    if (mdp1.checkValidity() && mdp1.value==mdp2.value) {
                         // ici on supprime le message d'erreur personnalisé, et du coup mdp2 devient valide.
                         document.getElementById('mdp2').setCustomValidity('');
                     } else {
