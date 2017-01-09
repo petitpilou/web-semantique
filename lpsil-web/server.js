@@ -11,45 +11,18 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: '<nom de vôtre base de données>'
+    database: 'websem'
 });
 connection.connect();
-connection.query('SELECT * from < table name >', function (err, rows, fields) {
+/*connection.query('SELECT * from < table name >', function (err, rows, fields) {
     if (!err)
         logger.info('Le résultat de la requête: ', rows);
     else
         logger.error(err);
-});
+});*/
 connection.end();
 
-/* Pool */
-var pool =  mysql.createPool({
-    connectionLimit : 100, //important
-    host : 'localhost',
-    user : '< MySQL username >',
-    password: '< MySQL password >',
-    database: '<nom de vôtre base de données>'
-});
-pool.getConnection(function(err,connection){
-    if (err) {
-        connection.release();
-        res.json({"code" : 100, "status" : "Erreur de connexion à la DB"});
-        return;
-    }
-    logger.info('connecté en tant que ' + connection.threadId);
-    connection.query("select * from user",function(err,rows){
-        connection.release();
-        if(!err) {
-            res.json(rows);
-        }
-    });
-    connection.on('error', function(err) {
-        res.json({"code" : 100, "status" : "Erreur de connexion à la DB"});
-        return;
-    });
-});
-
-// config
+/* Config */
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
