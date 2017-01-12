@@ -138,7 +138,10 @@ app.get('/changes', function (req, res) {
             "username":session.username,
             "firstname":session.firstname,
             "lastname":session.lastname,
-            "email":session.email
+            "email":session.email,
+            "birthdate":session.birthdate,
+            "city":session.city,
+            "color":session.color
         });
         session.lastPage = 'changes';
     }
@@ -146,7 +149,36 @@ app.get('/changes', function (req, res) {
 });
 
 app.post('/changes', function (req, res) {
-    //TODO
+    connection.connect();
+    connection.query("update user set "
+        + "firstname='" + req.body.firstname + "',"
+        + "lastname='" + req.body.lastname + "',"
+        + "email='" + req.body.email + "',"
+        + "birthdate='" + req.body.birthdate + "',"
+        + "city='" + req.body.city + "',"
+        + "color='" + req.body.color + "',"
+        + "password='" + req.body.password + "' "
+        + "where id='" + session.userid + "';",
+        function (err) {
+            if (!err) {
+                connection.query("select * from user where username='"+req.body.username+"';",
+                    function (err, rows, fields) {
+                        if (!err) {
+                            session.open = true;
+                            session.userid = rows[0].id;
+                            session.username = rows[0].username;
+                            session.firstname = rows[0].firstname;
+                            session.lastname = rows[0].lastname;
+                            session.email = rows[0].email;
+                            session.birthdate = rows[0].birthdate;
+                            session.city = rows[0].city;
+                            session.color = rows[0].color;
+                            res.redirect('/profile');
+                        } else logger.error(err);
+                    });
+            } else logger.error(err);
+        });
+    connection.end();
 });
 
 app.get('/logout', function (req, res) {
