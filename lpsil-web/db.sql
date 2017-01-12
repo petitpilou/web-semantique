@@ -7,6 +7,5 @@ create table user(
 	email varchar(30) unique not null,
 	password varchar(20) not null
 );
-
-insert into user (username,firstname,lastname,email,password) values ('petitpilou','Adrien','Magnin','adrien-06@hotmail.fr','pilou');
-insert into user (username,firstname,lastname,email,password) values ('johnduff','John','Duff','john.duff@gmail.com','jduff');
+insert into user (username,firstname,lastname,email,password) values ('adrien','Adrien','Magnin','adrien-06@hotmail.fr','pilou');
+insert into user (username,firstname,lastname,email,password) values ('john','John','Duff','john.duff@gmail.com','jdoe');

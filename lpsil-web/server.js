@@ -4,6 +4,9 @@ var favicon = require('serve-favicon'); // Charge le middleware de favicon
 var logger = require('log4js').getLogger('Server');
 var bodyParser = require('body-parser');
 var app = express();
+var session = require('express-session');
+session.open = false;
+session.lastPage = '/';
 
 /* Config */
 app.set('view engine', 'ejs');
@@ -12,9 +15,6 @@ app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('combined')); // Active le middleware de logging
 app.use(express.static(__dirname + '/public')); // Indique que le dossier /public contient des fichiers statiques (middleware chargé de base)
-app.use(express.session({secret: '???'}));
-req.session.lastPage = '/';
-req.session.open = false;
 
 /* MySql Server */
 var mysql = require('mysql');
@@ -28,14 +28,15 @@ var connection = mysql.createConnection({
 
 /* On affiche le formulaire d'enregistrement */
 app.get('/', function(req, res){
-    res.redirect('/login');
+    if (session.open) res.redirect('/profile');
+    else res.redirect('/login');
 });
 
 app.get('/login', function(req, res){
-    if (req.session.open) res.render(req.session.lastPage);
+    if (session.open) res.render(session.lastPage);
     else {
-        req.session.lastPage = 'login';
         res.render('login');
+        session.lastPage = 'login';
     }
 });
 
@@ -47,20 +48,24 @@ app.post('/login', function (req, res) {
             //logger.info("results: ", rows);
             if (rows.length>1) {
                 logger.info('same username for '+rows.length+' users !');
-                res.render('login');
+                res.redirect('/login');
             }
             else if (rows.length==0) {
                 logger.info('this user doesn\'t exist');
-                res.render('login');
+                res.redirect('/login');
             }
             else if (rows[0].username==req.body.username) {
                 if (rows[0].password==req.body.password) {
-                    req.session.open = true;
-                    req.session.lastPage = '/profile';
-                    res.render('profile', {"username":rows[0].username, "firstname":rows[0].firstname, "lastname":rows[0].lastname, "email":rows[0].email});
+                    session.open = true;
+                    session.userid = rows[0].id;
+                    session.username = rows[0].username;
+                    session.firstname = rows[0].firstname;
+                    session.lastname = rows[0].lastname;
+                    session.email = rows[0].email;
+                    res.redirect('/profile');
                 } else {
                     logger.info('wrong password');
-                    res.render('login');
+                    res.redirect('/login');
                 }
             }
         }
@@ -74,17 +79,17 @@ app.get('/register', function (req, res) {
 });
 
 app.get('/logout', function (req, res) {
-    //TODO déconnecter l'utilisateur
+    session.open = false;
     res.redirect('/');
 });
 
 /* On affiche le profile  */
 app.get('/profile', function (req, res) {
-    if (req.session.open) {
-        req.session.lastPage = 'profile';
-        res.render('profile');
+    if (session.open) {
+        res.render('profile', {"username":session.username, "firstname":session.firstname, "lastname":session.lastname, "email":session.email});
+        session.lastPage = 'profile';
     }
-    else res.render(req.session.lastPage);
+    else res.render(session.lastPage);
 });
 
 logger.info('server start');
