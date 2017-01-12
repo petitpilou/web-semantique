@@ -1,8 +1,8 @@
-<% var title = 'Formulaire login' %>
+<% var title = 'Log in' %>
 <% include head %>
 
-<h1>Login</h1>
-<a href="/profile">profile</a>
+<h1>Log in</h1>
+You don't have an account ? Sign up <a href="/register">here</a>.
 <form method="post" action="/login">
   <p>
     <label>Username:</label>
@@ -10,11 +10,13 @@
   </p>
   <p>
     <label>Password:</label>
-    <input type="text" name="password" required>
+    <input type="password" name="password" required>
   </p>
   <p>
-    <input type="submit" value="Login">
+    <input type="submit" value="Log in">
   </p>
 </form>
-
+<a href="/">home</a>
+<a href="/profile">profile</a>
+<a href="/changes">changes</a>
 <% include foot %>

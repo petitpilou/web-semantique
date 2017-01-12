@@ -5,7 +5,11 @@ create table user(
 	firstname varchar(30) not null,
 	lastname varchar(30) not null,
 	email varchar(30) unique not null,
+	birthdate varchar(20) not null,
+	city varchar(20) not null,
+	color varchar(8) not null,
 	password varchar(20) not null
 );
-insert into user (username,firstname,lastname,email,password) values ('adrien','Adrien','Magnin','adrien-06@hotmail.fr','pilou');
-insert into user (username,firstname,lastname,email,password) values ('john','John','Duff','john.duff@gmail.com','jdoe');
+insert into user values (null, 'petitpilou','Adrien','Magnin','adrien-06@hotmail.fr','20/01/1996','Antibes','#FFFFFF','pilou');
+insert into user values (null, 'johndoe','John','Duff','john.duff@gmail.com','01/04/2001','Marly Gomont','#FFFF00','jdoe');
+-- try convert(date,'dd/mm/yyyy') for birthdate

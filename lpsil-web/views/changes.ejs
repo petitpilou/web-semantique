@@ -59,40 +59,40 @@
     }
 </script>
 
-<h1>Sign up</h1>
-Already a member ? Log in <a href="/login">here</a>.
-<form method="post" action="/register">
+<h1><%= username %></h1>
+<a href="/profile">Back</a>
+<form method="post" action="/changes">
     <p>
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="" required autofocus>
+        <label>Password:</label>
+        <input type="password" id="pwd_old" name="password" pattern="[a-zA-Z0-9]{6,8}" placeholder="Type your old password" required autofocus>
     </p>
     <p>
         <label>First name:</label>
-        <input type="text" name="firstname" placeholder="" required>
+        <input type="text" name="firstname" placeholder="" required value="<%= firstname %>">
     </p>
     <p>
         <label>Last name:</label>
-        <input type="text" name="lastname" placeholder="" required>
+        <input type="text" name="lastname" placeholder="" required value="<%= lastname %>">
     </p>
     <p>
         <label>Email:</label>
-        <input type="email" name="email" placeholder="email@example.com" required>
+        <input type="email" name="email" placeholder="email@example.com" required value="<%= email %>">
     </p>
     <p>
         <label>Birthdate:</label>
-        <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required>
+        <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required value="<%= birthdate %>">
     </p>
     <p>
         <label>Age:</label>
-        <input type="number" id="age" name="age" disabled/>
+        <input type="number" id="age" name="age" onload="computeAge()" disabled/>
     </p>
     <p>
         <label>City:</label>
-        <input type="text" name="city" required placeholder="Current location"/>
+        <input type="text" name="city" required placeholder="Current location" value="<%= city %>"/>
     </p>
     <p>
         <label>Color:</label>
-        <input type="color" name="color" required/>
+        <input type="color" name="color" required value="<%= color %>"/>
     </p>
     <p>
         <label>Profile picture:</label>
@@ -108,10 +108,10 @@ Already a member ? Log in <a href="/login">here</a>.
         <input type="password" id="pwd2" name="password2" placeholder="Repeat password" onkeyup="validatePwd()" required>
     </p>
     <p>
-        <input type="submit" value="Sign up">
+        <input type="submit" value="Send changes">
     </p>
 </form>
 <a href="/">home</a>
-<a href="/profile">profile</a>
-<a href="/changes">changes</a>
+<a href="/login">login</a>
+<a href="/register">register</a>
 <% include foot %>
