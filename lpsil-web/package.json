@@ -11,5 +11,8 @@
     "serve-favicon": "^2.3.0"
   },
   "author": "Mail <adrien.magnin@etu.unice.fr>",
-  "description": "Enregistrement et authentification"
+  "description": "Enregistrement et authentification",
+  "scripts" : {
+    "start" : "node ./node_modules/nodemon/bin/nodemon.js server.js"
+  }
 }

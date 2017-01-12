@@ -1,0 +1,22 @@
+<% var title = 'Profile' %>
+<% include head %>
+
+<h1>Profile</h1>
+<a href="/">home</a>
+<p>
+    <label>Logged as </label><label><%= username %></label>
+</p>
+<p>
+    <label>First name: </label><label><%= firstname %></label>
+<p>
+<p>
+    <label>Last name: </label><label><%= lastname %></label>
+<p>
+<p>
+    <label>email: </label><label><%= email %></label>
+</p>
+<p>
+    <a href="/logout">Logout</a>
+</p>
+
+<% include foot %>
