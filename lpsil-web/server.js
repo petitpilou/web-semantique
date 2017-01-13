@@ -96,7 +96,7 @@ app.post('/register', function (req, res) {
         + req.body.password + "');",
         function (err) {
             if (!err) {
-                connection.query("select id, username, firstname, lastname, email, convert(date, birthdate,103),city,color " +
+                connection.query("select id, username, firstname, lastname, email, convert(date, birthdate, 103), city, color " +
                     "from user where username='"+req.body.username+"';",
                     function (err, rows, fields) {
                         if (!err) {
