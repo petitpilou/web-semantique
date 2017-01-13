@@ -42,8 +42,7 @@ app.get('/login', function(req, res){
 
 app.post('/login', function (req, res) {
     //connection.connect();
-    connection.query("select id,username,firstname,lastname,email,convert(date,birthdate,103),city,color " +
-        "from user where username='"+req.body.username+"';",
+    connection.query("select * from user where username='"+req.body.username+"';",
         function (err, rows, fields) {
             if (!err) {
                 //logger.info("results: ", rows);
@@ -85,34 +84,43 @@ app.get('/register', function (req, res) {
 
 app.post('/register', function (req, res) {
     //connection.connect();
-    connection.query("insert into user values (null, '"
-        + req.body.username + "','"
-        + req.body.firstname + "','"
-        + req.body.lastname + "','"
-        + req.body.email + "','"
-        + req.body.birthdate + "','"
-        + req.body.city + "','"
-        + req.body.color + "','"
-        + req.body.password + "');",
-        function (err) {
+    connection.query("select * from user where username='" + req.body.username + "';",
+        function (err, rows, fields) {
             if (!err) {
-                connection.query("select id, username, firstname, lastname, email, convert(date, birthdate, 103), city, color " +
-                    "from user where username='"+req.body.username+"';",
-                    function (err, rows, fields) {
-                        if (!err) {
-                            session.open = true;
-                            session.userid = rows[0].id;
-                            session.username = rows[0].username;
-                            session.firstname = rows[0].firstname;
-                            session.lastname = rows[0].lastname;
-                            session.email = rows[0].email;
-                            session.birthdate = rows[0].birthdate;
-                            session.city = rows[0].city;
-                            session.color = rows[0].color;
-                            res.redirect('/profile');
-                        } else logger.error(err);
-                    });
-            } else logger.error(err);
+                if(rows.length!=0) {
+                    logger.info('username already taken');
+                    res.redirect('/register');
+                } else {
+                    connection.query("insert into user values (null, '"
+                        + req.body.username + "','"
+                        + req.body.firstname + "','"
+                        + req.body.lastname + "','"
+                        + req.body.email + "','"
+                        + req.body.birthdate + "','"
+                        + req.body.city + "','"
+                        + req.body.color + "','"
+                        + req.body.password + "');",
+                        function (err) {
+                            if (!err) {
+                                connection.query("select * from user where username='" + req.body.username + "';",
+                                    function (err, rows, fields) {
+                                        if (!err) {
+                                            session.open = true;
+                                            session.userid = rows[0].id;
+                                            session.username = rows[0].username;
+                                            session.firstname = rows[0].firstname;
+                                            session.lastname = rows[0].lastname;
+                                            session.email = rows[0].email;
+                                            session.birthdate = rows[0].birthdate;
+                                            session.city = rows[0].city;
+                                            session.color = rows[0].color;
+                                            res.redirect('/profile');
+                                        } else logger.error('1] ' + err);
+                                    });
+                            } else logger.error('2] ' + err);
+                        });
+                }
+            } else logger.error('3] ' + err);
         });
     //connection.end();
 });
@@ -153,34 +161,39 @@ app.get('/changes', function (req, res) {
 
 app.post('/changes', function (req, res) {
     //connection.connect();
-    connection.query("update user set "
-        + "firstname='" + req.body.firstname + "',"
-        + "lastname='" + req.body.lastname + "',"
-        + "email='" + req.body.email + "',"
-        + "birthdate='" + req.body.birthdate + "',"
-        + "city='" + req.body.city + "',"
-        + "color='" + req.body.color + "',"
-        + "password='" + req.body.password + "' "
-        + "where id='" + session.userid + "';",
-        function (err) {
+    connection.query("select * from user where username='"+session.username+"';",
+        function (err, rows, fields) {
             if (!err) {
-                connection.query("select id,username,firstname,lastname,email,convert(date,birthdate,103),city,color " +
-                    "from user where username='"+req.body.username+"';",
-                    function (err, rows, fields) {
+                if (req.body.password == rows[0].password) {
+                    connection.query("update user set "
+                    + "firstname='" + req.body.firstname + "',"
+                    + "lastname='" + req.body.lastname + "',"
+                    + "email='" + req.body.email + "',"
+                    + "birthdate='" + req.body.birthdate + "',"
+                    + "city='" + req.body.city + "',"
+                    + "color='" + req.body.color + "' "
+                    + "where id='" + session.userid + "';",
+                    function (err) {
                         if (!err) {
-                            session.open = true;
-                            session.userid = rows[0].id;
-                            session.username = rows[0].username;
-                            session.firstname = rows[0].firstname;
-                            session.lastname = rows[0].lastname;
-                            session.email = rows[0].email;
-                            session.birthdate = rows[0].birthdate;
-                            session.city = rows[0].city;
-                            session.color = rows[0].color;
-                            res.redirect('/profile');
-                        } else logger.error(err);
+                            connection.query("select * from user where username='"+session.username+"';",
+                                function (err, rows, fields) {
+                                    if (!err) {
+                                        session.firstname = rows[0].firstname;
+                                        session.lastname = rows[0].lastname;
+                                        session.email = rows[0].email;
+                                        session.birthdate = rows[0].birthdate;
+                                        session.city = rows[0].city;
+                                        session.color = rows[0].color;
+                                        res.redirect('/profile');
+                                    } else logger.error('1] '+err);
+                                });
+                        } else logger.error('2] '+err);
                     });
-            } else logger.error(err);
+                } else {
+                    logger.info("wrong password");
+                    res.redirect('/');
+                }
+            } else logger.error('3] '+err);
         });
     //connection.end();
 });
@@ -207,3 +220,8 @@ app.get('/logout', function (req, res) {
 
 logger.info('server start');
 app.listen(1313);
+
+//TODO change password
+//TODO fix birthdate
+//TODO print errors
+//TODO profile pic

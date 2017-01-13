@@ -63,10 +63,6 @@
 <a href="/profile">Back</a>
 <form method="post" action="/changes">
     <p>
-        <label>Password:</label>
-        <input type="password" id="pwd_old" name="password" pattern="[a-zA-Z0-9]{6,8}" placeholder="Type your old password" required autofocus>
-    </p>
-    <p>
         <label>First name:</label>
         <input type="text" name="firstname" placeholder="" required value="<%= firstname %>">
     </p>
@@ -101,11 +97,7 @@
     </p>
     <p>
         <label>Password:</label>
-        <input type="password" id="pwd1" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="a-zA-Z0-9 | length:4+" onkeyup="validatePwd()" required>
-    </p>
-    <p>
-        <label>Password:</label>
-        <input type="password" id="pwd2" name="password2" placeholder="Repeat password" onkeyup="validatePwd()" required>
+        <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required autofocus>
     </p>
     <p>
         <input type="submit" value="Send changes">
