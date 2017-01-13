@@ -4,7 +4,7 @@ var favicon = require('serve-favicon'); // Charge le middleware de favicon
 var logger = require('log4js').getLogger('Server');
 var bodyParser = require('body-parser');
 var app = express();
-var session = require('express-session');
+var session = require("express-session");
 session.open = false;
 session.lastPage = '/';
 
@@ -41,8 +41,9 @@ app.get('/login', function(req, res){
 });
 
 app.post('/login', function (req, res) {
-    connection.connect();
-    connection.query("select * from user where username='"+req.body.username+"';",
+    //connection.connect();
+    connection.query("select id,username,firstname,lastname,email,convert(date,birthdate,103),city,color " +
+        "from user where username='"+req.body.username+"';",
         function (err, rows, fields) {
             if (!err) {
                 //logger.info("results: ", rows);
@@ -71,7 +72,7 @@ app.post('/login', function (req, res) {
                 }
             } else logger.error(err);
         });
-    connection.end();
+    //connection.end();
 });
 
 app.get('/register', function (req, res) {
@@ -83,7 +84,7 @@ app.get('/register', function (req, res) {
 });
 
 app.post('/register', function (req, res) {
-    connection.connect();
+    //connection.connect();
     connection.query("insert into user values (null, '"
         + req.body.username + "','"
         + req.body.firstname + "','"
@@ -95,7 +96,8 @@ app.post('/register', function (req, res) {
         + req.body.password + "');",
         function (err) {
             if (!err) {
-                connection.query("select * from user where username='"+req.body.username+"';",
+                connection.query("select id, username, firstname, lastname, email, convert(date, birthdate,103),city,color " +
+                    "from user where username='"+req.body.username+"';",
                     function (err, rows, fields) {
                         if (!err) {
                             session.open = true;
@@ -112,20 +114,21 @@ app.post('/register', function (req, res) {
                     });
             } else logger.error(err);
         });
-    connection.end();
+    //connection.end();
 });
 
 /* On affiche le profile  */
 app.get('/profile', function (req, res) {
     if (session.open) {
         res.render('profile', {
-            "username":session.username,
-            "firstname":session.firstname,
-            "lastname":session.lastname,
-            "email":session.email,
-            "birthdate":session.birthdate,
-            "city":session.city,
-            "color":session.color
+            username:session.username,
+            firstname:session.firstname,
+            lastname:session.lastname,
+            email:session.email,
+            birthdate:session.birthdate,
+            city:session.city,
+            color:session.color,
+            title:session.username
         });
         session.lastPage = 'profile';
     }
@@ -135,13 +138,13 @@ app.get('/profile', function (req, res) {
 app.get('/changes', function (req, res) {
     if (session.open) {
         res.render('changes', {
-            "username":session.username,
-            "firstname":session.firstname,
-            "lastname":session.lastname,
-            "email":session.email,
-            "birthdate":session.birthdate,
-            "city":session.city,
-            "color":session.color
+            username:session.username,
+            firstname:session.firstname,
+            lastname:session.lastname,
+            email:session.email,
+            birthdate:session.birthdate,
+            city:session.city,
+            color:session.color
         });
         session.lastPage = 'changes';
     }
@@ -149,7 +152,7 @@ app.get('/changes', function (req, res) {
 });
 
 app.post('/changes', function (req, res) {
-    connection.connect();
+    //connection.connect();
     connection.query("update user set "
         + "firstname='" + req.body.firstname + "',"
         + "lastname='" + req.body.lastname + "',"
@@ -161,7 +164,8 @@ app.post('/changes', function (req, res) {
         + "where id='" + session.userid + "';",
         function (err) {
             if (!err) {
-                connection.query("select * from user where username='"+req.body.username+"';",
+                connection.query("select id,username,firstname,lastname,email,convert(date,birthdate,103),city,color " +
+                    "from user where username='"+req.body.username+"';",
                     function (err, rows, fields) {
                         if (!err) {
                             session.open = true;
@@ -178,17 +182,14 @@ app.post('/changes', function (req, res) {
                     });
             } else logger.error(err);
         });
-    connection.end();
+    //connection.end();
 });
 
 app.post('/remove', function(req, res) {
-    connection.connect();
-    //delete from 'user' where 'id'="+session.userid+";
-    connection.query("select * from user where id='"+session.userid+"';",
+    //connection.connect();
+    connection.query("delete from user where id='"+session.userid+"';",
         function(err, row, fields) {
             if (!err) {
-                logger.info(row);
-                session.destroy();
                 session.open = false;
                 res.redirect('/');
             } else {
@@ -196,11 +197,10 @@ app.post('/remove', function(req, res) {
                 res.redirect(session.lastPage);
             }
         });
-    connection.end();
+    //connection.end();
 });
 
 app.get('/logout', function (req, res) {
-    session.destroy();
     session.open = false;
     res.redirect('/');
 });

@@ -1,28 +1,21 @@
-<% var title = 'Profile' %>
 <% include head %>
 
-<h1>Profile</h1>
+<h1><%= username %></h1>
 <a href="/changes">Account settings</a>
 <p>
-    <label>Logged as </label><label><%= username %></label>
+    <h3><%= firstname %> <%= lastname %></h3>
+<p>
+<p>
+    <h3><%= email %></h3>
 </p>
 <p>
-    <label>First name: </label><label><%= firstname %></label>
-<p>
-<p>
-    <label>Last name: </label><label><%= lastname %></label>
-<p>
-<p>
-    <label>email: </label><label><%= email %></label>
+    <label><%= birthdate %></label>
 </p>
 <p>
-    <label>birthdate: </label><input type="date" value="<%= birthdate %>" disabled>
+    <label><%= city %></label>
 </p>
 <p>
-    <label>city: </label><label><%= city %></label>
-</p>
-<p>
-    <label>color: </label><input type="color" value="<%= color %>" disabled>
+    <canvas id="preview" width="25" height="25" style="background-color:<%= color %>"></canvas>
 </p>
 <p>
     <a href="/logout">Logout</a>
