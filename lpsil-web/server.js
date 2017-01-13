@@ -181,7 +181,26 @@ app.post('/changes', function (req, res) {
     connection.end();
 });
 
+app.post('/remove', function(req, res) {
+    connection.connect();
+    //delete from 'user' where 'id'="+session.userid+";
+    connection.query("select * from user where id='"+session.userid+"';",
+        function(err, row, fields) {
+            if (!err) {
+                logger.info(row);
+                session.destroy();
+                session.open = false;
+                res.redirect('/');
+            } else {
+                logger.error(err);
+                res.redirect(session.lastPage);
+            }
+        });
+    connection.end();
+});
+
 app.get('/logout', function (req, res) {
+    session.destroy();
     session.open = false;
     res.redirect('/');
 });
