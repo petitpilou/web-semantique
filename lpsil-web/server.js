@@ -50,8 +50,7 @@ app.post('/login', function (req, res) {
                     logger.info('same username for '+rows.length+' users !');
                     res.redirect('/login');
                 } else if (rows.length==0) {
-                    logger.info('this user doesn\'t exist');
-                    res.redirect('/login');
+                    res.render('/login', { errorUser:'This user doesn\'t exist.'});
                 } else if (rows[0].username==req.body.username) {
                     if (rows[0].password==req.body.password) {
                         session.open = true;
@@ -65,8 +64,7 @@ app.post('/login', function (req, res) {
                         session.color = rows[0].color;
                         res.redirect('/profile');
                     } else {
-                        logger.info('wrong password');
-                        res.redirect('/login');
+                        res.render('/login', { errorPass:'The password is incorrect.'});
                     }
                 }
             } else logger.error(err);
@@ -221,7 +219,8 @@ app.get('/logout', function (req, res) {
 logger.info('server start');
 app.listen(1313);
 
-//TODO change password
-//TODO fix birthdate
 //TODO print errors
+//TODO fix birthdate
+//TODO change password
 //TODO profile pic
+//TODO add gender and other stuff
