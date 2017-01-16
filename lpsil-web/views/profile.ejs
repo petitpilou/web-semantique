@@ -10,13 +10,19 @@
 <h1><%= username %></h1>
 <a href="/changes">Account settings</a>
 <p>
-    <h3><%= firstname %> <%= lastname %></h3>
+    <h3><%= firstname %> <%= lastname %> (<%= gender %>)</h3>
 <p>
 <p>
     <h3><%= email %></h3>
 </p>
 <p>
-    <label>Birthdate: <%= convertDate(birthdate) %></label>
+    <label><%= tel %></label>
+</p>
+<p>
+    <label><%= website %></label>
+</p>
+<p>
+    <label>Birth date: <%= convertDate(birthdate) %></label>
 </p>
 <p>
     <label>Address: <%= city %></label>
@@ -30,7 +36,4 @@
 <p>
     <a href="/logout">Logout</a>
 </p>
-<a href="/">home</a>
-<a href="/login">login</a>
-<a href="/register">register</a>
 <% include foot %>

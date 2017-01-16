@@ -82,12 +82,26 @@ Already a member ? Log in <a href="/login">here</a>.
         <input type="email" name="email" placeholder="example@email.com" required>
     </p>
     <p>
-        <label>Birthdate:</label>
+        <label>Phone number:</label>
+        <input type="tel" name="tel" pattern="[0-9]{8,12}" required>
+    </p>
+    <p>
+        <label>Website:</label>
+        <input type="url" name="website" required value="http://">
+    </p>
+    <p>
+        <label>Birth date:</label>
         <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required>
     </p>
     <p>
         <label>Age:</label>
         <input type="number" id="age" name="age" disabled/>
+    </p>
+    <p>
+        <label>Gender:</label>
+        <input type="radio" name="gender" value="M" required> Male
+        <input type="radio" name="gender" value="F"> Female
+        <input type="radio" name="gender" value="O"> Other
     </p>
     <p>
         <label>City:</label>
@@ -118,7 +132,4 @@ Already a member ? Log in <a href="/login">here</a>.
         <input type="submit" value="Sign up">
     </p>
 </form>
-<a href="/">home</a>
-<a href="/profile">profile</a>
-<a href="/changes">changes</a>
 <% include foot %>

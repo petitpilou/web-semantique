@@ -75,12 +75,26 @@
         <input type="email" name="email" placeholder="email@example.com" required value="<%= email %>">
     </p>
     <p>
-        <label>Birthdate:</label>
+        <label>Phone number:</label>
+        <input type="tel" name="tel" pattern="[0-9]{8,12}" required value="<%= tel %>">
+    </p>
+    <p>
+        <label>Website</label>
+        <input type="url" name="website" required value="<%= website %>">
+    </p>
+    <p>
+        <label>Birth date:</label>
         <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required value="<%= convertDate(birthdate) %>">
     </p>
     <p>
         <label>Age:</label>
         <input type="number" id="age" name="age" onload="computeAge()" disabled>
+    </p>
+    <p>
+        <label>Gender:</label>
+        <input type="radio" name="gender" value="M" <%if (gender=="M") {%>checked<%}%> required> Male
+        <input type="radio" name="gender" value="F" <%if (gender=="F") {%>checked<%}%>> Female
+        <input type="radio" name="gender" value="O" <%if (gender=="O") {%>checked<%}%>> Other
     </p>
     <p>
         <label>City:</label>
@@ -111,9 +125,13 @@
     </p>
 </form>
 <form method="post" action="/remove">
+    <p>
+        <label>Password:</label>
+        <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required autofocus>
+        <%if (wrongPass) { %>
+        <label class="error">Wrong password.</label>
+        <% } %>
+    </p>
     <input type="submit" value="Delete account">
 </form>
-<a href="/">home</a>
-<a href="/login">login</a>
-<a href="/register">register</a>
 <% include foot %>

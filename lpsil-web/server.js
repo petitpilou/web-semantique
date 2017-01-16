@@ -62,7 +62,10 @@ app.post('/login', function (req, res) {
                         session.firstname = rows[0].firstname;
                         session.lastname = rows[0].lastname;
                         session.email = rows[0].email;
+                        session.tel = rows[0].tel;
+                        session.website = rows[0].website;
                         session.birthdate = rows[0].birthdate;
+                        session.gender = rows[0].gender;
                         session.city = rows[0].city;
                         session.size = rows[0].size;
                         session.color = rows[0].color;
@@ -97,7 +100,10 @@ app.post('/register', function (req, res) {
                         + req.body.firstname + "','"
                         + req.body.lastname + "','"
                         + req.body.email + "','"
+                        + req.body.tel + "','"
+                        + req.body.website + "','"
                         + req.body.birthdate + "','"
+                        + req.body.gender + "','"
                         + req.body.city + "','"
                         + req.body.size + "','"
                         + req.body.color + "','"
@@ -113,7 +119,10 @@ app.post('/register', function (req, res) {
                                             session.firstname = rows[0].firstname;
                                             session.lastname = rows[0].lastname;
                                             session.email = rows[0].email;
+                                            session.tel = rows[0].tel;
+                                            session.website = rows[0].website;
                                             session.birthdate = rows[0].birthdate;
+                                            session.gender = rows[0].gender;
                                             session.city = rows[0].city;
                                             session.size = rows[0].size;
                                             session.color = rows[0].color;
@@ -136,7 +145,10 @@ app.get('/profile', function (req, res) {
             firstname:session.firstname,
             lastname:session.lastname,
             email:session.email,
+            tel:session.tel,
+            website:session.website,
             birthdate:session.birthdate,
+            gender:session.gender,
             city:session.city,
             size:session.size,
             color:session.color,
@@ -155,7 +167,10 @@ app.get('/changes', function (req, res) {
             firstname:session.firstname,
             lastname:session.lastname,
             email:session.email,
+            tel:session.tel,
+            website:session.website,
             birthdate:session.birthdate,
+            gender:session.gender,
             city:session.city,
             size:session.size,
             color:session.color
@@ -175,7 +190,10 @@ app.post('/changes', function (req, res) {
                     + "firstname='" + req.body.firstname + "',"
                     + "lastname='" + req.body.lastname + "',"
                     + "email='" + req.body.email + "',"
+                    + "tel='" + req.body.tel + "',"
+                    + "website='" + req.body.website + "',"
                     + "birthdate='" + req.body.birthdate + "',"
+                    + "gender='" + req.body.gender + "',"
                     + "city='" + req.body.city + "',"
                     + "size='" + req.body.size + "',"
                     + "color='" + req.body.color + "' "
@@ -188,7 +206,10 @@ app.post('/changes', function (req, res) {
                                         session.firstname = rows[0].firstname;
                                         session.lastname = rows[0].lastname;
                                         session.email = rows[0].email;
+                                        session.tel = rows[0].tel;
+                                        session.website = rows[0].website;
                                         session.birthdate = rows[0].birthdate;
+                                        session.gender = rows[0].gender;
                                         session.city = rows[0].city;
                                         session.size= rows[0].size;
                                         session.color = rows[0].color;
@@ -204,7 +225,10 @@ app.post('/changes', function (req, res) {
                         firstname:session.firstname,
                         lastname:session.lastname,
                         email:session.email,
+                        tel:session.tel,
+                        website:session.website,
                         birthdate:session.birthdate,
+                        gender:session.gender,
                         city:session.city,
                         size:session.size,
                         color:session.color
@@ -252,15 +276,37 @@ app.post('/password', function (req, res) {
 
 app.post('/remove', function(req, res) {
     //connection.connect();
-    connection.query("delete from user where id='"+session.userid+"';",
-        function(err, row, fields) {
+    connection.query("select * from user where id='"+session.userid+"';",
+        function(err, rows, fields) {
             if (!err) {
-                session.open = false;
-                res.redirect('/');
-            } else {
-                logger.error(err);
-                res.redirect(session.lastPage);
-            }
+                if (req.body.password == rows[0].password) {
+                    connection.query("delete from user where id='" + session.userid + "';",
+                        function (err, rows, fields) {
+                            if (!err) {
+                                session.open = false;
+                                res.redirect('/');
+                            } else {
+                                logger.error('1] ' + err);
+                                res.redirect(session.lastPage);
+                            }
+                        });
+                } else {
+                    res.render('changes', {
+                        wrongPass:true,
+                        username:session.username,
+                        firstname:session.firstname,
+                        lastname:session.lastname,
+                        email:session.email,
+                        tel:session.tel,
+                        website:session.website,
+                        birthdate:session.birthdate,
+                        gender:session.gender,
+                        city:session.city,
+                        size:session.size,
+                        color:session.color
+                    });
+                }
+            } else logger.error('2] '+err);
         });
     //connection.end();
 });
@@ -274,6 +320,5 @@ logger.info('server start');
 app.listen(1313);
 
 //TODO profile pic
-//TODO add gender and other stuff
-
 //TODO print errors (css)
+//TODO sessions
