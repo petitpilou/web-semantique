@@ -35,7 +35,7 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (session.open) res.redirect(session.lastPage);
     else {
-        res.render('login');
+        res.render('login', { errorUser:"", errorPass:"" });
         session.lastPage = 'login';
     }
 });
@@ -50,7 +50,12 @@ app.post('/login', function (req, res) {
                     logger.info('same username for '+rows.length+' users !');
                     res.redirect('/login');
                 } else if (rows.length==0) {
-                    res.render('/login', { errorUser:'This user doesn\'t exist.'});
+                    logger.info("test");
+                    try {
+                        res.render('/login', {errorUser:"This user doesn't exist.", errorPass:""});
+                    } catch (e) {
+                        logger.info(e);
+                    }
                 } else if (rows[0].username==req.body.username) {
                     if (rows[0].password==req.body.password) {
                         session.open = true;
@@ -64,7 +69,7 @@ app.post('/login', function (req, res) {
                         session.color = rows[0].color;
                         res.redirect('/profile');
                     } else {
-                        res.render('/login', { errorPass:'The password is incorrect.'});
+                        res.render('/login', { errorUser:"", errorPass:"The password is incorrect."});
                     }
                 }
             } else logger.error(err);
