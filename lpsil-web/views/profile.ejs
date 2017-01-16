@@ -1,5 +1,43 @@
 <% include head %>
 <script>
+    loadProfilePic = function (e) {
+        var canvas = document.getElementById("profilepic");
+        var ctx = canvas.getContext("2d");
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        canvas.width=0;
+        canvas.height=0;
+        var file = document.getElementById("profilepicfile").files[0];
+        var img = document.createElement("img");
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            if (!file.type.match(/image.*/)) {
+                document.getElementById("profilepicfile").setCustomValidity("Upload an image file.");
+                document.getElementById("profilepicfile").value = "";
+            } else {
+                img.src = e.target.result;
+                document.getElementById("profilepicfile").setCustomValidity("");
+                var MAX_WIDTH = 75;
+                var MAX_HEIGHT = 75;
+                var width = img.width;
+                var height = img.height;
+                if (width > height) {
+                    var pourcentage = MAX_WIDTH/width;
+                    width = MAX_WIDTH;
+                    height = height*pourcentage;
+                } else {
+                    var pourcentage = MAX_HEIGHT/height;
+                    height = MAX_HEIGHT;
+                    width = width*pourcentage;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                var dataurl = canvas.toDataURL("image/png");
+                document.getElementById("profilepic").value = dataurl;
+            };
+        }
+        reader.readAsDataURL(file);
+    }
     <% function convertDate(inputFormat) {
         function pad(s) { return (s < 10) ? '0' + s : s; }
         var d = new Date(inputFormat);
@@ -7,13 +45,16 @@
     } %>
 </script>
 
-<h1><%= username %></h1>
+<p>
+    <canvas id="profilepic" width="75" height="75" style="background-image:url(/pic/default.gif);border:2px solid <%= color %>;border-radius:40px"></canvas>
+    <label style="font-size:30px;padding-left:10px"><b><%= username %></b></label>
+</p>
 <a href="/changes">Account settings</a>
 <p>
-    <h3><%= firstname %> <%= lastname %> (<%= gender %>)</h3>
+    <label style="font-size:16px"><b><%= firstname %> <%= lastname %> (<%= gender %>)</b></label>
 <p>
 <p>
-    <h3><%= email %></h3>
+    <label style="font-size:16px"><b><%= email %></b></label>
 </p>
 <p>
     <label><%= tel %></label>
@@ -29,9 +70,6 @@
 </p>
 <p>
     <label>Size: <%= size %> cm</label>
-</p>
-<p>
-    <canvas id="preview" width="25" height="25" style="background-color:<%= color %>"></canvas>
 </p>
 <p>
     <a href="/logout">Logout</a>

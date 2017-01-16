@@ -116,7 +116,7 @@
     <p>
         <label>Password:</label>
         <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required autofocus>
-        <%if (wrongPass) { %>
+        <%if (wrongPass1) { %>
         <label class="error">Wrong password.</label>
         <% } %>
     </p>
@@ -127,8 +127,8 @@
 <form method="post" action="/remove">
     <p>
         <label>Password:</label>
-        <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required autofocus>
-        <%if (wrongPass) { %>
+        <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required>
+        <%if (wrongPass2) { %>
         <label class="error">Wrong password.</label>
         <% } %>
     </p>
