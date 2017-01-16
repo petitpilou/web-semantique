@@ -1,4 +1,11 @@
 <% include head %>
+<script>
+    <% function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat);
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+    } %>
+</script>
 
 <h1><%= username %></h1>
 <a href="/changes">Account settings</a>
@@ -9,10 +16,13 @@
     <h3><%= email %></h3>
 </p>
 <p>
-    <label><%= birthdate %></label>
+    <label><%= convertDate(birthdate) %></label>
 </p>
 <p>
     <label><%= city %></label>
+</p>
+<p>
+    <label><%= size %></label>
 </p>
 <p>
     <canvas id="preview" width="25" height="25" style="background-color:<%= color %>"></canvas>

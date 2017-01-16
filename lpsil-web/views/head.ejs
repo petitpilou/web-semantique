@@ -2,7 +2,7 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel="stylesheet" media="screen" href="../css/styles.css" >
+    <!-- <link rel="stylesheet" media="screen" href="../css/styles.css" > -->
     <style>
         body {
             padding: 40px;
@@ -11,9 +11,12 @@
             color: #3a3a3a;
         }
         .error {
-            color: #ff3d1b;
-            border: 3px, solid, red;
+            color: #c85534;
+            background-color: #ffa786;
+            border: 2px solid #c85534;
             border-radius: 5px;
+            padding: 3px 5px 2px 5px;
+            margin: 2px;
         }
         .success {
             color: #068013;
@@ -27,6 +30,7 @@
         form input {
             height:20px;
             width:220px;
+            display:inline-block;
         }
         form input[type="submit"] {
             margin-left:260px;

@@ -51,16 +51,16 @@
         }
         reader.readAsDataURL(file);
     }
-    validatePwd = function(e) {
-        var mdp1 = document.getElementById('pwd1');
-        var mdp2 = document.getElementById('pwd2');
-        if (mdp1.checkValidity() && mdp1.value==mdp2.value) { document.getElementById('pwd2').setCustomValidity(''); }
-        else { document.getElementById('pwd2').setCustomValidity('Passwords should not be different.'); }
-    }
+    <% function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat);
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+    } %>
 </script>
 
 <h1><%= username %></h1>
-<a href="/profile">Back</a>
+<a href="/profile">Profile</a>
+<a href="/password">Change password</a>
 <form method="post" action="/changes">
     <p>
         <label>First name:</label>
@@ -76,15 +76,19 @@
     </p>
     <p>
         <label>Birthdate:</label>
-        <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required value="<%= birthdate %>">
+        <input type="date" id="birthdate" name="birthdate" placeholder="DD/MM/YYYY" onchange="computeAge()" required value="<%= convertDate(birthdate) %>">
     </p>
     <p>
         <label>Age:</label>
-        <input type="number" id="age" name="age" onload="computeAge()" disabled/>
+        <input type="number" id="age" name="age" onload="computeAge()" disabled>
     </p>
     <p>
         <label>City:</label>
-        <input type="text" name="city" required placeholder="Current location" value="<%= city %>"/>
+        <input type="text" name="city" required placeholder="Current location" value="<%= city %>">
+    </p>
+    <p>
+        <label>Size:</label>
+        <input type="number" name="size" required placeholder="Size in centimeters" value="<%= size %>">
     </p>
     <p>
         <label>Color:</label>
@@ -98,6 +102,9 @@
     <p>
         <label>Password:</label>
         <input type="password" id="pwd" name="password" pattern="[a-zA-Z0-9]{4,}" placeholder="Enter your password" required autofocus>
+        <%if (wrongPass) { %>
+        <label class="error">Wrong password.</label>
+        <% } %>
     </p>
     <p>
         <input type="submit" value="Send changes">

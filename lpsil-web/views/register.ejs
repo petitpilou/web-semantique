@@ -65,6 +65,9 @@ Already a member ? Log in <a href="/login">here</a>.
     <p>
         <label>Username:</label>
         <input type="text" name="username" placeholder="" required autofocus>
+        <%if (userTaken) { %>
+        <label class="error">Username already taken.</label>
+        <% } %>
     </p>
     <p>
         <label>First name:</label>
@@ -76,7 +79,7 @@ Already a member ? Log in <a href="/login">here</a>.
     </p>
     <p>
         <label>Email:</label>
-        <input type="email" name="email" placeholder="email@example.com" required>
+        <input type="email" name="email" placeholder="example@email.com" required>
     </p>
     <p>
         <label>Birthdate:</label>
@@ -89,6 +92,10 @@ Already a member ? Log in <a href="/login">here</a>.
     <p>
         <label>City:</label>
         <input type="text" name="city" required placeholder="Current location"/>
+    </p>
+    <p>
+        <label>Size:</label>
+        <input type="number" name="size" required placeholder="Size in centimeters">
     </p>
     <p>
         <label>Color:</label>

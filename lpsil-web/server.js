@@ -35,7 +35,7 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (session.open) res.redirect(session.lastPage);
     else {
-        res.render('login', { errorUser:"", errorPass:"" });
+        res.render('login', { errorUser:false, errorPass:false });
         session.lastPage = 'login';
     }
 });
@@ -45,14 +45,12 @@ app.post('/login', function (req, res) {
     connection.query("select * from user where username='"+req.body.username+"';",
         function (err, rows, fields) {
             if (!err) {
-                //logger.info("results: ", rows);
                 if (rows.length>1) {
                     logger.info('same username for '+rows.length+' users !');
                     res.redirect('/login');
                 } else if (rows.length==0) {
-                    logger.info("test");
                     try {
-                        res.render('/login', {errorUser:"This user doesn't exist.", errorPass:""});
+                        res.render('login', {errorUser:true, errorPass:false});
                     } catch (e) {
                         logger.info(e);
                     }
@@ -66,10 +64,11 @@ app.post('/login', function (req, res) {
                         session.email = rows[0].email;
                         session.birthdate = rows[0].birthdate;
                         session.city = rows[0].city;
+                        session.size = rows[0].size;
                         session.color = rows[0].color;
                         res.redirect('/profile');
                     } else {
-                        res.render('/login', { errorUser:"", errorPass:"The password is incorrect."});
+                        res.render('login', { errorUser:false, errorPass:true});
                     }
                 }
             } else logger.error(err);
@@ -80,7 +79,7 @@ app.post('/login', function (req, res) {
 app.get('/register', function (req, res) {
     if (session.open) res.redirect(session.lastPage);
     else {
-        res.render('register');
+        res.render('register', {userTaken:false});
         session.lastPage = 'register';
     }
 });
@@ -91,8 +90,7 @@ app.post('/register', function (req, res) {
         function (err, rows, fields) {
             if (!err) {
                 if(rows.length!=0) {
-                    logger.info('username already taken');
-                    res.redirect('/register');
+                    res.render('register', {userTaken:true});
                 } else {
                     connection.query("insert into user values (null, '"
                         + req.body.username + "','"
@@ -101,6 +99,7 @@ app.post('/register', function (req, res) {
                         + req.body.email + "','"
                         + req.body.birthdate + "','"
                         + req.body.city + "','"
+                        + req.body.size + "','"
                         + req.body.color + "','"
                         + req.body.password + "');",
                         function (err) {
@@ -116,6 +115,7 @@ app.post('/register', function (req, res) {
                                             session.email = rows[0].email;
                                             session.birthdate = rows[0].birthdate;
                                             session.city = rows[0].city;
+                                            session.size = rows[0].size;
                                             session.color = rows[0].color;
                                             res.redirect('/profile');
                                         } else logger.error('1] ' + err);
@@ -138,6 +138,7 @@ app.get('/profile', function (req, res) {
             email:session.email,
             birthdate:session.birthdate,
             city:session.city,
+            size:session.size,
             color:session.color,
             title:session.username
         });
@@ -149,12 +150,14 @@ app.get('/profile', function (req, res) {
 app.get('/changes', function (req, res) {
     if (session.open) {
         res.render('changes', {
+            wrongPass:false,
             username:session.username,
             firstname:session.firstname,
             lastname:session.lastname,
             email:session.email,
             birthdate:session.birthdate,
             city:session.city,
+            size:session.size,
             color:session.color
         });
         session.lastPage = 'changes';
@@ -174,6 +177,7 @@ app.post('/changes', function (req, res) {
                     + "email='" + req.body.email + "',"
                     + "birthdate='" + req.body.birthdate + "',"
                     + "city='" + req.body.city + "',"
+                    + "size='" + req.body.size + "',"
                     + "color='" + req.body.color + "' "
                     + "where id='" + session.userid + "';",
                     function (err) {
@@ -186,6 +190,7 @@ app.post('/changes', function (req, res) {
                                         session.email = rows[0].email;
                                         session.birthdate = rows[0].birthdate;
                                         session.city = rows[0].city;
+                                        session.size= rows[0].size;
                                         session.color = rows[0].color;
                                         res.redirect('/profile');
                                     } else logger.error('1] '+err);
@@ -193,12 +198,56 @@ app.post('/changes', function (req, res) {
                         } else logger.error('2] '+err);
                     });
                 } else {
-                    logger.info("wrong password");
-                    res.redirect('/');
+                    res.render('changes', {
+                        wrongPass:true,
+                        username:session.username,
+                        firstname:session.firstname,
+                        lastname:session.lastname,
+                        email:session.email,
+                        birthdate:session.birthdate,
+                        city:session.city,
+                        size:session.size,
+                        color:session.color
+                    });
                 }
             } else logger.error('3] '+err);
         });
     //connection.end();
+});
+
+app.get('/password', function (req, res) {
+    if (session.open) {
+        res.render('password', {
+            wrongPass:false,
+            username:session.username
+        });
+        session.lastPage = 'password';
+    }
+    else res.redirect(session.lastPage);
+});
+
+app.post('/password', function (req, res) {
+    connection.query("select * from user where username='"+session.username+"';",
+        function (err, rows, fields) {
+            if (!err) {
+                if (req.body.password == rows[0].password) {
+                    connection.query("update user set "
+                        + "password='" + req.body.password1 + "' "
+                        + "where id='" + session.userid + "';",
+                        function (err) {
+                            if (!err) {
+                                res.redirect('/profile');
+                            } else logger.error('1] '+err);
+                        });
+
+                } else {
+                    res.render('password', {
+                        wrongPass:true,
+                        username:session.username
+                    });
+                }
+            } else logger.error('2] '+err);
+        });
 });
 
 app.post('/remove', function(req, res) {
@@ -224,8 +273,7 @@ app.get('/logout', function (req, res) {
 logger.info('server start');
 app.listen(1313);
 
-//TODO print errors
-//TODO fix birthdate
-//TODO change password
 //TODO profile pic
 //TODO add gender and other stuff
+
+//TODO print errors (css)

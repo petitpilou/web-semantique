@@ -7,12 +7,16 @@ You don't have an account ? Sign up <a href="/register">here</a>.
     <p>
         <label>Username:</label>
         <input type="text" name="username" required>
-        <label class="error" style="width:370px;"><%= errorUser %></label>
+        <%if (errorUser) { %>
+        <label class="error">This user doesn't exist.</label>
+        <% } %>
     </p>
     <p>
         <label>Password:</label>
         <input type="password" name="password" required>
-        <label class="error" style="width:370px;"><%= errorPass %></label>
+        <%if (errorPass) { %>
+        <label class="error">Wrong password.</label>
+        <% } %>
     </p>
     <p>
         <input type="submit" value="Log in">
