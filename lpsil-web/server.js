@@ -15,7 +15,6 @@ app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('combined')); // Active le middleware de logging
 app.use(express.static(__dirname + '/public')); // Indique que le dossier /public contient des fichiers statiques (middleware chargé de base)
-app.use(express.static('/pic'));
 
 /* MySql Server */
 var mysql = require('mysql');
@@ -158,6 +157,15 @@ app.get('/profile', function (req, res) {
         session.lastPage = 'profile';
     }
     else res.redirect(session.lastPage);
+});
+
+app.get('/pictionnary', function(req, res) {
+   if (session.open) {
+       res.render('pictionnary', {
+           username:session.username
+       });
+       session.lastPage = 'pictionnary';
+   } else res.redirect(session.lastPage);
 });
 
 app.get('/changes', function (req, res) {
@@ -324,5 +332,7 @@ logger.info('server start');
 app.listen(1313);
 
 //TODO profile pic
+//TODO pictionnary
+//TODO size: range
 //TODO print errors (css)
 //TODO sessions
